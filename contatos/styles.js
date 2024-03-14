@@ -51,10 +51,10 @@ const styles = StyleSheet.create({
     textoBotao: {
         color: '#FFF',
     },
-    areaNome: {
+    areaMaior: {
         width: '55%',
     },
-    areaTelefone: {
+    areaMenor: {
         width: '30%',
     },
 
@@ -94,8 +94,6 @@ const styles = StyleSheet.create({
         width: '10%',
     },
     iconTelefone: {
-        width: 20,
-        height: 25,
         marginRight: 5,
     },
     listaTelefone: {

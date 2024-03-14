@@ -8,7 +8,7 @@ export default function App() {
 
   const [id, setId] = useState();
   const [nome, setNome] = useState();
-  const [telefone, setTelefone] = useState();
+  const [codigo, setCodigo] = useState();
   const [email, setTEmail] = useState();
   const [senha, setSenha] = useState();
   const [contatos, setContatos] = useState([]);  
@@ -32,7 +32,7 @@ export default function App() {
     let obj = {
       id: novoRegistro ? createUniqueId() : id,
       nome: nome,
-      telefone: telefone,
+      codigo: codigo,
       email: email,
       senha: senha
     };
@@ -83,7 +83,7 @@ export default function App() {
     if (contato) {
       setId(contato.id);
       setNome(contato.nome);
-      setTelefone(contato.telefone);
+      setCodigo(contato.codigo);
       setTEmail(contato.email);
       setSenha(contato.senha);
     }
@@ -94,7 +94,7 @@ export default function App() {
 
   async function limparCampos() {
     setNome("");
-    setTelefone("");
+    setCodigo("");
     setTEmail("");
     setSenha("");
     setId(undefined);
@@ -161,29 +161,29 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      <Text style={{ fontSize: 25, color: '#FFF', backgroundColor: 'blue', width: '100%', textAlign: 'center' }}>Agenda de Contatos - v1.0</Text>
+      <Text style={{ fontSize: 25, color: '#FFF', backgroundColor: 'red', width: '100%', textAlign: 'center' }}>Exercício de contatos</Text>
       <Text /><Text />
 
       <View style={styles.areaDados}>
 
-        <View style={styles.areaNome}>
+        <View style={styles.areaMaior}>
+          <Text>Código</Text>
+          <TextInput style={styles.caixaTexto}
+            onChangeText={(texto) => setCodigo(texto)}
+            value={codigo}
+            keyboardType='phone-pad' />
+        </View>
+
+        <View style={styles.areaMenor}>
           <Text>Nome</Text>
           <TextInput style={styles.caixaTexto}
             onChangeText={(texto) => setNome(texto)}
             value={nome} />
         </View>
-
-        <View style={styles.areaTelefone}>
-          <Text>Telefone</Text>
-          <TextInput style={styles.caixaTexto}
-            onChangeText={(texto) => setTelefone(texto)}
-            value={telefone}
-            keyboardType='phone-pad' />
-        </View>
-      </View>
+      </View>      
 
       <View style={styles.areaDados}>
-      <View style={styles.areaNome}>
+        <View style={styles.areaMaior}>
           <Text>Email</Text>
           <TextInput style={styles.caixaTexto}
             onChangeText={(texto) => setTEmail(texto)}
@@ -191,7 +191,7 @@ export default function App() {
             keyboardType='phone-pad' />
         </View>
 
-        <View style={styles.areaTelefone}>
+        <View style={styles.areaMenor}>
           <Text>Senha</Text>
           <TextInput style={styles.caixaTexto}
             onChangeText={(texto) => setSenha(texto)}
