@@ -1,15 +1,12 @@
-import * as SQLite from 'expo-sqlite';
+import * as SQLite from 'expo-sqlite/next';
 
 export function getDbConnection() {
-    const cx = SQLite.openDatabase('dbContatos3.db');
+    const cx = SQLite.openDatabaseAsync('dbContatos4.db');
     return cx;    
 }
 
 export async function createTable() {
-    return new Promise(async (resolve, reject) => {
-        //Salvar a senha assim não é legal, mas é só um exemplo.
-        //const query = `DROP TABLE IF EXISTS tbContatos;`
-        const query = `CREATE TABLE IF NOT EXISTS tbContatos
+    const query = `CREATE TABLE IF NOT EXISTS tbContatos
         (
             id text not null primary key,
             codigo text not null,
@@ -18,194 +15,80 @@ export async function createTable() {
             senha text not null
         )`;
 
-        let dbCx = getDbConnection();        
-        
-        await dbCx.transaction(async tx => {
-            await tx.executeSql(query);
-            resolve(true); 
-        },
-            error => {
-                console.log(error);
-                resolve(false);
-            }
-        );
-    });
+    var cx = await getDbConnection();
+    await cx.execAsync(query);
 };
 
-export async function dropTable() {
-    return new Promise((resolve, reject) => {
-      const query = `DROP TABLE IF EXISTS tbContatos`;
-  
-      let dbCx = getDbConnection();
-  
-      dbCx.transaction(
-        tx => {
-          tx.executeSql(query);
-          resolve(true);
-        },
-        error => {
-          console.log(error);
-          resolve(false);
+export async function obtemContato() {
+    var retorno = []
+    var dbCx = await getDbConnection();
+    const registros = await dbCx.getAllAsync('SELECT * FROM tbContatos LIMIT 1');
+
+    for (const registro of registros) {
+
+        let obj = {
+            id: registro.id,
+            codigo: registro.codigo,
+            nome: registro.nome,
+            email: registro.email,
+            senha: registro.senha
         }
-      );
-    });
-  }
 
-export function obtemContato() {
-
-    return new Promise((resolve, reject) => {
-
-        let dbCx = getDbConnection();
-        dbCx.transaction(tx => {
-            let query = 'select * from tbContatos LIMIT 1';
-            console.log('Executando a query ' + query);
-            tx.executeSql(query, [],
-                (tx, registros) => {
-                    console.log(registros.rows.length);
-                    var retorno = {
-                        id : registros.rows.item(0).id,
-                        codigo: registros.rows.item(0).codigo,
-                        nome: registros.rows.item(0).nome,
-                        email: registros.rows.item(0).email,
-                        senha: registros.rows.item(0).senha,
-                    }
-                    console.log(retorno)
-                    resolve(retorno);
-                })
-        },
-            error => {
-                console.log(error);
-                resolve([]);
-            }
-        )
+        retorno.push(obj);
     }
-    );
+
+    return retorno;
 }
 
-export function obtemTodosContatos() {
+export async function obtemTodosContatos() {
+    var retorno = []
+    var dbCx = await getDbConnection();
+    const registros = await dbCx.getAllAsync('SELECT * FROM tbContatos ');
 
-    return new Promise(async (resolve, reject) => {
+    for (const registro of registros) {
 
-        let dbCx = getDbConnection();
-        dbCx.transaction(async tx => {
-            let query = 'select * from tbContatos';
-            console.log('Executando a query ' + query);
-            await tx.executeSql(query, [],
-                (tx, registros) => {
-                    var retorno = [];
-
-                    for (let n = 0; n < registros.rows.length; n++) {
-                        let obj = {
-                            id: registros.rows.item(n).id,
-                            nome: registros.rows.item(n).nome,
-                            telefone: registros.rows.item(n).telefone
-                        }
-                        retorno.push(obj);
-                    }
-                    resolve(retorno);
-                })
-        },
-            error => {
-                console.log(error);
-                resolve([]);
-            }
-        )
+        let obj = {
+            id: registro.id,
+            codigo: registro.codigo,
+            nome: registro.nome,
+            email: registro.email,
+            senha: registro.senha
+        }
+        retorno.push(obj);
     }
-    );
+
+    return retorno;
 }
 
-export function adicionaContato(contato) {
-    console.log('Começando o método adicionaContato')
-    const query = 'insert into tbContatos (id, codigo, nome , email, senha) values (?, ?, ?, ?, ?)';
-    let dbCx = getDbConnection();
+export async function adicionaContato(contato) {
+    let dbCx = await getDbConnection();
+    let query = 'insert into tbContatos (id, codigo, nome ,email, senha) values (?,?,?,?,?)';
+    const result = await dbCx.runAsync(query, [contato.id, contato.codigo, contato.nome, contato.email, contato.senha]);
 
-    return new Promise(async (resolve, reject) => {
-        dbCx.transaction(async tx => {
-            await tx.executeSql(query, [contato.id.toString(), contato.codigo.toString(), contato.nome, contato.email, contato.senha],
-                (_, resultSet) => {
-                    console.log([contato.id.toString(), contato.codigo.toString(), contato.nome, contato.email, contato.senha])
-                    resolve(true);
-                },
-                (_, error) => {
-                    console.log('Erro ao adicionar contato:', error);
-                    resolve(false);
-                    return true; // Rollback transaction
-                }
-            );
-        });
-        }, error => {        
-            console.log('Erro ao adicionar contato:', error)
-            resolve(false);
-        });
+    return result.changes == 1;
 }
 
-export function alteraContato(contato) {
-    console.log('Começando o método alteraContato');
-    return new Promise(async (resolve, reject) => {
-        let query = 'update tbContatos set codigo=?, email=?, nome=?, senha=? where id=?';
-        let dbCx = getDbConnection();
-        console.log([contato.codigo.toString(), contato.email, contato.nome, contato.senha, contato.id.toString()])
+export async function alteraContato(contato) {
+    let dbCx = await getDbConnection();
+    let query = 'update tbContatos set codigo=?, nome=?, email=?, senha=? where id=?';
+    const result = await dbCx.runAsync(query, [contato.codigo, contato.nome, contato.email, contato.senha, contato.id]);
 
-        dbCx.transaction(async tx => {
-            await tx.executeSql(query, [contato.codigo.toString(), contato.email, contato.nome, contato.senha, contato.id.toString()],
-                (tx, resultado) => {
-                    resolve(resultado.rowsAffected > 0);
-                })
-        },
-        error => {
-            console.log(error);
-            resolve(false);
-        })
-    }, error => {
-        console.log(error);
-        resolve(false);
-    });
+    return result.changes == 1;
 }
 
-export function excluiContato(codigo) {
-    console.log('Apagando contato ' + codigo);
-    return new Promise(async(resolve, reject) => {
-        let query = 'delete from tbContatos where codigo=?';
-        let dbCx = getDbConnection();
+export async function excluiContato(id) {
+    console.log('Apagando usuario ' + id);
+    let query = 'delete from tbContatos where id=?';
+    var dbCx = await getDbConnection();
+    const result = await dbCx.runAsync(query, id);
 
-        await dbCx.transaction(async tx => {
-            await tx.executeSql(query, [codigo],
-                (tx, resultado) => {
-                    resolve(resultado.rowsAffected > 0);
-                })
-        },
-            error => {
-                console.log(error);
-                resolve(false);
-            }
-        )
-    }, error => {
-            console.log(error);
-            resolve(false);
-        }
-    );
+    return result.changes == 1;
 }
 
-export function excluiContatos() {
-    console.log('Apagando contatos ');
-    return new Promise(async(resolve, reject) => {
-        let query = 'delete from tbContatos';
-        let dbCx = getDbConnection();
-
-        await dbCx.transaction(async tx => {
-            await tx.executeSql(query, [],
-                (tx, resultado) => {
-                    resolve(resultado.rowsAffected > 0);
-                })
-        },
-            error => {
-                console.log(error);
-                resolve(false);
-            }
-        )
-    }, error => {
-            console.log(error);
-            resolve(false);
-        }
-    );
+export async function excluiContatos() {
+    let query = 'delete from tbContatos';
+    var dbCx = await getDbConnection();
+    const result = await dbCx.runAsync(query);
+    
+    return result.changes == 1;
 }

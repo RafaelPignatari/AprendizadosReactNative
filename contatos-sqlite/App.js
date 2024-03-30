@@ -2,14 +2,7 @@ import { Alert, ScrollView, Text, View, TextInput, TouchableOpacity, Keyboard } 
 import styles from './styles';
 import { useState, useEffect } from 'react';
 import Contato from './components/Contato';
-import {
-  createTable,
-  adicionaContato,
-  obtemContato,
-  alteraContato,
-  obtemTodosContatos,
-  excluiContato
-} from './services/dbservice';
+import * as dbservice from './services/dbservice';
 
 export default function App() {
 
@@ -19,13 +12,12 @@ export default function App() {
   const [email, setTEmail] = useState();
   const [senha, setSenha] = useState();
   const [contatos, setContatos] = useState([]);  
-  let tabelasCriadas = false;
 
   useEffect(
     () => {
       processamentoUseEffect(); //necessário método pois aqui não pode utilizar await...
+      console.log("Use Effect!")
       carregaDados();
-      console.log('useEffect');
     }, []);
 
 
@@ -34,14 +26,10 @@ export default function App() {
   }
 
   async function processamentoUseEffect() {
-    if (!tabelasCriadas) {
-      console.log("Verificando necessidade de criar tabelas...");
-      tabelasCriadas = true;
-      let resultado = await createTable();
+    let resultado = await dbservice.createTable();
 
-      if (resultado)
-        console.log("Criou tabelas...");
-    }
+    if (resultado)
+      console.log("Criou tabelas...");
   }
 
   async function salvaDados() {
@@ -58,14 +46,15 @@ export default function App() {
     try {
 
       if (novoRegistro)
-        await adicionaContato(obj); // inclusão
+        await dbservice.adicionaContato(obj); // inclusão
       else {
-        await alteraContato(obj); // alteração
+        await dbservice.alteraContato(obj); // alteração
       }
 
       Keyboard.dismiss();
       Alert.alert('Dados salvos com sucesso!!!');
       limparCampos();
+      carregaDados();
     } catch (e) {
       Alert.alert(e.toString());
     }
@@ -73,10 +62,11 @@ export default function App() {
 
   async function carregaDados() {
     try {
-      let contatos = await obtemTodosContatos();
+      let contatos = await dbservice.obtemTodosContatos();
+      console.log(contatos)
 
       if (contatos != null) {
-        setContatos(obj);
+        setContatos(contatos);
       }
       else {
         setContatos([]);
@@ -112,25 +102,14 @@ export default function App() {
     Keyboard.dismiss();
   }
 
-
-  async function efetivaExclusaoTodosRegistros() {
-    try {
-      await removerElementos();
-      Alert.alert('Registros removidos!');
-      await carregaDados();
-    }
-    catch (e) {
-      Alert.alert(e.toString());
-    }
-  }
-
   function apagarTudo() {
     if (Alert.alert('Muita atenção!!!', 'Confirma a exclusão de todos os contatos?',
       [
         {
           text: 'Sim, confirmo!',
-          onPress: () => {
-            efetivaExclusaoTodosRegistros();
+          onPress: async() => {
+            await dbservice.excluiContatos();
+            await carregaDados();
           }
         },
         {
@@ -142,6 +121,7 @@ export default function App() {
 
 
   function removerElemento(identificador) {
+    console.log(identificador)
     Alert.alert('Atenção', 'Confirma a remoção do contato?',
       [
         {
@@ -157,7 +137,7 @@ export default function App() {
 
   async function efetivaRemoverContato(identificador) {
     try {
-      await excluiContato(identificador);
+      await dbservice.excluiContato(identificador);
       Keyboard.dismiss();
       Alert.alert('Contato apagado com sucesso!!!');
       limparCampos();
