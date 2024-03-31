@@ -9,7 +9,7 @@ export default function CadCompra({ navigation }) {
             <Text style={styles.titulo}>Compre os produtos desejados!</Text>
 
 
-            
+
             <TouchableOpacity style={styles.botaoVoltar}
                 onPress={() => navigation.navigate('Home')}>
                 <Text style={styles.labelBotao}>Voltar</Text>
