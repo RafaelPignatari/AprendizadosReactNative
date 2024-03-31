@@ -162,7 +162,7 @@ export default function CadCategoria({ navigation }) {
           </TouchableOpacity>
         </View>
   
-        <ScrollView style={styles.listaContatos}>
+        <ScrollView style={styles.listaCategorias}>
           {
             categorias.map((categoria, index) => (
               <Categoria index={index} categoria={categoria} editar={editar} removerElemento={removerElemento} key={index.toString()} />

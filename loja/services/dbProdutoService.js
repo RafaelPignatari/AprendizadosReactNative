@@ -43,6 +43,27 @@ export async function obtemTodosProdutos() {
     return retorno;
 }
 
+export async function obtemProdutosPorCategoria(categoria) {
+    var retorno = []
+    var dbCx = await getDbConnection();
+    const registros = await dbCx.getAllAsync('SELECT * FROM tbProduto WHERE categoria = ? ', [categoria]);
+
+    for (const registro of registros) {
+
+        let obj = {
+            id: registro.id,
+            codigo: registro.codigo,
+            descricao: registro.descricao,
+            preco: registro.preco,
+            quantidade: registro.quantidade,
+            categoria: registro.categoria
+        }
+        retorno.push(obj);
+    }
+
+    return retorno;
+}
+
 export async function adicionaProduto(produto) {
     let dbCx = await getDbConnection();
     let query = 'insert into tbProduto (id, codigo, descricao, preco, quantidade, categoria) values (?,?,?,?,?,?)';
