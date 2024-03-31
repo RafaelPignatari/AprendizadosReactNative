@@ -4,11 +4,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
     backgroundColor: 'orange',
   },
   titulo: {
     fontSize: 30,
+    marginTop: 20,
     marginBottom: 50,
   },
   labelBotao: {
