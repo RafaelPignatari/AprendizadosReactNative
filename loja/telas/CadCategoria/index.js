@@ -101,7 +101,7 @@ export default function CadCategoria({ navigation }) {
     
     function removerElemento(identificador) {
         console.log(identificador)
-        Alert.alert('Atenção', 'Confirma a remoção do contato?',
+        Alert.alert('Atenção', 'Confirma a remoção da categoria?',
         [
             {
                 text: 'Sim',
@@ -165,7 +165,7 @@ export default function CadCategoria({ navigation }) {
         <ScrollView style={styles.listaContatos}>
           {
             categorias.map((categoria, index) => (
-              <Categoria index={index} categoria={categoria} editar={editar} removerElemento={removerElemento} />
+              <Categoria index={index} categoria={categoria} editar={editar} removerElemento={removerElemento} key={index.toString()} />
             ))
           }
         </ScrollView>

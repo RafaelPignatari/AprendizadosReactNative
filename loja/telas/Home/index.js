@@ -37,19 +37,19 @@ export default function Home({ navigation }) {
       </TouchableOpacity>
 
       <TouchableOpacity
-          style={styles.botaoTela1}
+          style={styles.botaoTelaPrincipal}
           onPress={()=>{navigation.navigate('CadCompra')}}>
-        <Text style={styles.labelBotao}>Comprar</Text>
+        <Text style={styles.labelBotao}>Comprar Produtos</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
-          style={styles.botaoTela1}
+          style={styles.botaoTelaPrincipal}
           onPress={()=>{navigation.navigate('CadProduto')}}>
         <Text style={styles.labelBotao}>Adicionar Produtos</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
-          style={styles.botaoTela1}
+          style={styles.botaoTelaPrincipal}
           onPress={()=>{navigation.navigate('CadCategoria')}}>
         <Text style={styles.labelBotao}>Adicionar Categorias</Text>
       </TouchableOpacity>
