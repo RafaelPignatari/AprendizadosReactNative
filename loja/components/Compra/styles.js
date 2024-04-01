@@ -27,13 +27,18 @@ const styles = StyleSheet.create({
         width: '40%',
         fontSize: 18,
         paddingRight: 10,
-        color: '#000',
     },
 
-    preco: {
+    quantidade: {
         color: '#000',
         fontSize: 15,
         paddingRight: 10,
+    },
+
+    dadosBotoesAcao: {
+        alignItems: 'flex-end',
+        justifyContent: 'flex-end',
+        width: '10%',
     },
 
     botaoVoltar: {

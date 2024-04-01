@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import * as dbservice from '../../services/dbVendaService';
 import { obtemTodosProdutos, obtemProdutosPorCategoria } from '../../services/dbProdutoService';
 import { obtemTodasCategorias } from '../../services/dbCategoriaService';
-import Venda from '../../components/Venda';
+import Compra from '../../components/Compra';
 
 export default function CadCompra({navigation}){
     const [categoria, setCategoria] = useState();
@@ -21,7 +21,9 @@ export default function CadCompra({navigation}){
     
     async function efetuaCompra() {    
         try {    
-            await dbservice.adicionaVenda(produtosVenda);
+            let produtosAux = produtosVenda.filter(p => p.quantidade > 0);
+            console.log(produtosAux);
+            await dbservice.adicionaVenda(produtosAux);
         
             Keyboard.dismiss();
             Alert.alert('Venda efetuada com sucesso!!!');
@@ -53,7 +55,7 @@ export default function CadCompra({navigation}){
     function atualizaProdutosVenda(produtos, zeraQuantidade) {
         // Filtra os produtos que possuem quantidade maior que zero
         let produtosAux = produtos.filter(p => p.quantidade > 0);
-
+        
         //Zera a quantidade (o cliente escolherá a quantidade na tela de venda)
         if (zeraQuantidade == true) {
             produtosAux.forEach(p => {
@@ -156,7 +158,7 @@ export default function CadCompra({navigation}){
         <ScrollView style={styles.listaCompras}>
           {
             produtosVenda.map((produto, index) => (
-              <Venda index={index} produto={produto} atualizaQuantidade={atualizaQuantidade} key={index.toString()} />
+              <Compra index={index} produto={produto} atualizaQuantidade={atualizaQuantidade} key={index.toString()} />
             ))
           }
         </ScrollView>

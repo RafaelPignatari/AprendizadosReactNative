@@ -1,28 +1,40 @@
 import React from 'react';
-import {TouchableOpacity, View, Text, TextInput} from 'react-native';
+import {TouchableOpacity, Text, View} from 'react-native';
 import styles from './styles';
 import {Ionicons} from '@expo/vector-icons';
 
-export default function Venda({index, produto, atualizaQuantidade}) {
+export default function Venda({index, venda, mostraDetalhes}) {
+
+    function enviaSinalDetalhes() {
+        let msg = '';
+
+        for (let i = 0; i < venda.preco.length; i++) {
+            msg += venda.produtos[i] + ' - R$ ' + venda.preco[i] + ' - ' + venda.quantidade[i] + ' unidade(s) - ';
+            msg += 'Preço total: ' + parseFloat(venda.preco[i].replace(',', '.')) * parseInt(venda.quantidade[i]) +'\n\n';
+        }
+        
+        mostraDetalhes(msg);
+    }
+
+    function calculaValorTotal() {
+        let valorTotal = 0;
+
+        for (let i = 0; i < venda.preco.length; i++) {
+            valorTotal += parseFloat(venda.preco[i].replace(',', '.')) * parseInt(venda.quantidade[i]);
+        }
+
+        return valorTotal.toString().replace('.', ',').padEnd(2, '0');
+    }
 
     return (
-        <View style={styles.produto} key={index.toString()}>
-        <Text style={styles.listaProdutos}> {produto.descricao}</Text>
-            <View style={styles.dadosListaProduto}>
-                <Ionicons name="wallet-outline" style={styles.iconTelefone} size={25}></Ionicons>
-                <Text style={styles.listaProdutos}>R$ {produto.preco} </Text>
+        <TouchableOpacity onPress={() => enviaSinalDetalhes()}>
+            <View style={styles.produto} key={index.toString()} ontouch>
+                <Text style={styles.listaProdutos}> {venda.dataHora}</Text>
+                <View style={styles.dadosListaProduto}>
+                    <Ionicons name="wallet-outline" size={25}></Ionicons>
+                    <Text style={styles.preco}>R$ {calculaValorTotal()} </Text>
+                </View>
             </View>
-
-            <View style={styles.dadosBotoesAcao}>
-                <TextInput style={styles.quantidade} 
-                            value={produto.quantidade.toString()}
-                            onChangeText={(texto) => atualizaQuantidade(produto.id, texto)}                            
-                            keyboardType='phone-pad' />
-
-                <TouchableOpacity onPress={() => atualizaQuantidade(produto.id, produto.quantidade + 1)}>
-                    <Ionicons name="add-circle-outline" size={32} color="green" />
-                </TouchableOpacity>
-            </View>
-        </View>
+        </TouchableOpacity>
     );
 }

@@ -8,7 +8,6 @@ export default function Home({ navigation }) {
   async function processamentoUseEffect() {
     try {
       await criaTabelas();
-      console.log(`Executou criaTabelas1`)
     }
     catch (e) {
       console.log(e.toString());
@@ -52,6 +51,12 @@ export default function Home({ navigation }) {
           style={styles.botaoTelaPrincipal}
           onPress={()=>{navigation.navigate('CadCategoria')}}>
         <Text style={styles.labelBotao}>Adicionar Categorias</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+          style={styles.botaoTelaPrincipal}
+          onPress={()=>{navigation.navigate('VisVendas')}}>
+        <Text style={styles.labelBotao}>Visualizar Vendas</Text>
       </TouchableOpacity>
 
       <StatusBar style="auto" />

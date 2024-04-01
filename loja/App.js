@@ -3,13 +3,15 @@ import Home from './telas/Home/index';
 import CadCompra from './telas/CadCompra/index';
 import CadProduto from './telas/CadProduto/index';
 import CadCategoria from './telas/CadCategoria/index';
+import VisVendas from './telas/VisVendas/index';
 
 const Routes = createAppContainer(
   createSwitchNavigator({
     Home,
     CadCompra,
     CadProduto,
-    CadCategoria
+    CadCategoria,
+    VisVendas
   })
 );
 

@@ -1,7 +1,7 @@
 import * as SQLite from 'expo-sqlite/next';
 
 export function getDbConnection() {
-    const nomeBanco = 'dbLoja10.db';
+    const nomeBanco = 'dbLoja24.db';
     const cx = SQLite.openDatabaseAsync(nomeBanco);
     return cx;    
 }
