@@ -69,6 +69,7 @@ export default function CadProduto({navigation}){
                 setProdutos([]);
             }    
         } catch (e) {
+            console.log(e.toString());
             Alert.alert(e.toString());
         }
     }
@@ -196,9 +197,8 @@ export default function CadProduto({navigation}){
 
           <View style={styles.areaPorTres}>
             <Text>Categoria</Text>
-            <Picker selectedValue={categoria}
-                onValueChange={(itemValue, itemIndex) => setCategoria(itemValue)}
-                style={styles.picker}>
+            <Picker style={styles.picker} selectedValue={categoria}
+                onValueChange={(itemValue, itemIndex) => setCategoria(itemValue)}>
                 <Picker.Item label="Selecione..." value=""/>
                 {categorias.map((item, index) => (
                     <Picker.Item key={index} label={item.descricao} value={item.id}/>

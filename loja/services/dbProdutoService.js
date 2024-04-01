@@ -1,4 +1,4 @@
-import { getDbConnection } from './dbservice';
+import { getDbConnection, closeDbConnection } from './dbservice';
 
 export async function obtemProduto() {
     var retorno = []
@@ -18,6 +18,8 @@ export async function obtemProduto() {
 
         retorno.push(obj);
     }
+
+    await closeDbConnection(dbCx);
 
     return retorno;
 }
@@ -40,6 +42,8 @@ export async function obtemTodosProdutos() {
         retorno.push(obj);
     }
 
+    await closeDbConnection(dbCx);
+
     return retorno;
 }
 
@@ -61,6 +65,8 @@ export async function obtemProdutosPorCategoria(categoria) {
         retorno.push(obj);
     }
 
+    await closeDbConnection(dbCx);
+
     return retorno;
 }
 
@@ -69,6 +75,7 @@ export async function adicionaProduto(produto) {
     let query = 'insert into tbProduto (id, codigo, descricao, preco, quantidade, categoria) values (?,?,?,?,?,?)';
     const result = await dbCx.runAsync(query, [produto.id, produto.codigo, produto.descricao, produto.preco, produto.quantidade, produto.categoria]);
 
+    await closeDbConnection(dbCx);
     return result.changes == 1;
 }
 
@@ -77,6 +84,7 @@ export async function alteraProduto(produto) {
     let query = 'update tbProduto set codigo=?, descricao=?, preco=?, quantidade=?, categoria=? where id=?';
     const result = await dbCx.runAsync(query, [produto.codigo, produto.descricao, produto.preco, produto.quantidade, produto.categoria, produto.id]);
 
+    await closeDbConnection(dbCx);
     return result.changes == 1;
 }
 
@@ -85,6 +93,7 @@ export async function excluiProduto(id) {
     var dbCx = await getDbConnection();
     const result = await dbCx.runAsync(query, id);
 
+    await closeDbConnection(dbCx);
     return result.changes == 1;
 }
 
@@ -93,5 +102,6 @@ export async function excluiProdutos() {
     var dbCx = await getDbConnection();
     const result = await dbCx.runAsync(query);
     
+    await closeDbConnection(dbCx);
     return result.changes == 1;
 }

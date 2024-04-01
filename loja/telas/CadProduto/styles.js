@@ -19,12 +19,10 @@ const styles = StyleSheet.create({
   },
 
   picker: {
-    color: '#000',
-    borderColor: "#000",
-    borderWidth: 2,
     width: '100%',
-    paddingHorizontal: 10,
-    borderRadius: 10,
+    padding: 0,
+    color: '#000',
+    margin: 5
   },
 
   botao: {

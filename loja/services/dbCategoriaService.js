@@ -1,4 +1,4 @@
-import { getDbConnection } from './dbservice';
+import { getDbConnection, closeDbConnection } from './dbservice';
 
 export async function obtemCategoria() {
     var retorno = []
@@ -15,6 +15,8 @@ export async function obtemCategoria() {
 
         retorno.push(obj);
     }
+
+    await closeDbConnection(dbCx);
 
     return retorno;
 }
@@ -34,6 +36,8 @@ export async function obtemTodasCategorias() {
         retorno.push(obj);
     }
 
+    await closeDbConnection(dbCx);
+
     return retorno;
 }
 
@@ -42,6 +46,7 @@ export async function adicionaCategoria(categoria) {
     let query = 'insert into tbCategorias (id, codigo, descricao) values (?,?,?)';
     const result = await dbCx.runAsync(query, [categoria.id, categoria.codigo, categoria.descricao]);
 
+    await closeDbConnection(dbCx);
     return result.changes == 1;
 }
 
@@ -50,6 +55,7 @@ export async function alteraCategoria(categoria) {
     let query = 'update tbCategorias set codigo=?, descricao=? where id=?';
     const result = await dbCx.runAsync(query, [categoria.codigo, categoria.descricao, categoria.id]);
 
+    await closeDbConnection(dbCx);
     return result.changes == 1;
 }
 
@@ -58,6 +64,7 @@ export async function excluiCategoria(id) {
     var dbCx = await getDbConnection();
     const result = await dbCx.runAsync(query, id);
 
+    await closeDbConnection(dbCx);
     return result.changes == 1;
 }
 
@@ -66,5 +73,6 @@ export async function excluiCategorias() {
     var dbCx = await getDbConnection();
     const result = await dbCx.runAsync(query);
     
+    await closeDbConnection(dbCx);
     return result.changes == 1;
 }

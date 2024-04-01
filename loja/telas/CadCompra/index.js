@@ -2,10 +2,10 @@ import { Alert, ScrollView, Text, View, TouchableOpacity, Keyboard } from 'react
 import { Picker } from '@react-native-picker/picker';
 import styles from './styles';
 import { useState, useEffect } from 'react';
-import * as dbservice from '../../services/dbVendaService';
 import { obtemTodosProdutos, obtemProdutosPorCategoria } from '../../services/dbProdutoService';
 import { obtemTodasCategorias } from '../../services/dbCategoriaService';
 import Compra from '../../components/Compra';
+import { adicionaCarrinho } from '../../services/dbCarrinhoService';
 
 export default function CadCompra({navigation}){
     const [categoria, setCategoria] = useState();
@@ -17,23 +17,7 @@ export default function CadCompra({navigation}){
         () => {
             carregaCategorias();
             carregaDados();
-    }, []);
-    
-    async function efetuaCompra() {    
-        try {    
-            let produtosAux = produtosVenda.filter(p => p.quantidade > 0);
-            console.log(produtosAux);
-            await dbservice.adicionaVenda(produtosAux);
-        
-            Keyboard.dismiss();
-            Alert.alert('Venda efetuada com sucesso!!!');
-            limparCampos();
-            carregaDados();
-        } catch (e) {
-            console.log(e.toString());
-            Alert.alert(e.toString());
-        }
-    }
+    }, []);    
     
     async function carregaDados() {
         try {
@@ -48,6 +32,26 @@ export default function CadCompra({navigation}){
                 setProdutosVenda([]);
             }    
         } catch (e) {
+            Alert.alert(e.toString());
+        }
+    }
+
+    async function adicionaAoCarrinho() {
+        try {
+            let produtosAux = produtosVenda.filter(p => p.quantidade > 0);
+            console.log(produtosAux);
+            console.log(produtosAux.length);
+
+            if (produtosAux.length != 0) {
+                await adicionaCarrinho(produtosAux);
+                Alert.alert('Produtos adicionados ao carrinho!');
+            }
+            else {
+                Alert.alert('Nenhum produto selecionado!');
+            }
+        }
+        catch (e) {
+            console.log(e.toString());
             Alert.alert(e.toString());
         }
     }
@@ -103,12 +107,6 @@ export default function CadCompra({navigation}){
             }        
         }
     }
-    
-    async function limparCampos() {
-        setCategoria('');
-
-        Keyboard.dismiss();
-    }
 
     async function carregaCategorias() {
         try {
@@ -146,12 +144,12 @@ export default function CadCompra({navigation}){
         </View>
 
         <View style={styles.areaBotoes}>
-          <TouchableOpacity style={styles.botao} onPress={() => efetuaCompra()}>
-            <Text style={styles.textoBotao}>Comprar</Text>
+          <TouchableOpacity style={styles.botao} onPress={() => adicionaAoCarrinho()}>
+            <Text style={styles.textoBotao}>Adicionar Carrinho</Text>
           </TouchableOpacity>
   
-          <TouchableOpacity style={styles.botao} onPress={() => limparCampos()}>
-            <Text style={styles.textoBotao}>Cancelar</Text>
+          <TouchableOpacity style={styles.botao} onPress={() => navigation.navigate('Carrinho')}>
+            <Text style={styles.textoBotao}>Acessar carrinho</Text>
           </TouchableOpacity>
         </View>
   

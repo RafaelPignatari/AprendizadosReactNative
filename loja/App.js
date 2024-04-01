@@ -4,6 +4,7 @@ import CadCompra from './telas/CadCompra/index';
 import CadProduto from './telas/CadProduto/index';
 import CadCategoria from './telas/CadCategoria/index';
 import VisVendas from './telas/VisVendas/index';
+import Carrinho from './telas/Carrinho/index';
 
 const Routes = createAppContainer(
   createSwitchNavigator({
@@ -11,7 +12,8 @@ const Routes = createAppContainer(
     CadCompra,
     CadProduto,
     CadCategoria,
-    VisVendas
+    VisVendas,
+    Carrinho
   })
 );
 

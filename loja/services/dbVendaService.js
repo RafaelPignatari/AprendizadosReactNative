@@ -1,4 +1,4 @@
-import { getDbConnection } from './dbservice';
+import { getDbConnection, closeDbConnection } from './dbservice';
 
 function createUniqueId() {
     return Date.now().toString(36) + Math.random().toString(36).slice(0, 2);
@@ -11,7 +11,7 @@ function obtemDataHora() {
     const mes = String(dataAtual.getMonth() + 1).padStart(2, '0'); // Janeiro é 0!
     const ano = dataAtual.getFullYear();
 
-    const horas = String(dataAtual.getHours()).padStart(2, '0');
+    const horas = String(dataAtual.getHours() - 3).padStart(2, '0');
     const minutos = String(dataAtual.getMinutes()).padStart(2, '0');
     const segundos = String(dataAtual.getSeconds()).padStart(2, '0');
 
@@ -37,7 +37,9 @@ export async function obtemTodasVendas() {
 
         retorno.push(obj);
     }
-    console.log(retorno);
+
+    await closeDbConnection(dbCx);
+
     return retorno;
 }
 
@@ -61,7 +63,9 @@ export async function obtemVendasPorCategoria(categoria) {
 
         retorno.push(obj);
     }
-    console.log(retorno);
+    
+    await closeDbConnection(dbCx);
+    
     return retorno;
 }
 
@@ -78,6 +82,7 @@ export async function adicionaVenda(compras) {
 
     let query = 'insert into tbVendas (id, datahora) values (?,?)';
     const result = await dbCx.runAsync(query, [idVenda, obtemDataHora()]);
+    await closeDbConnection(dbCx);
 
     return result.changes == 1;
 }

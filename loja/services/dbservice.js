@@ -1,9 +1,18 @@
 import * as SQLite from 'expo-sqlite/next';
 
 export function getDbConnection() {
-    const nomeBanco = 'dbLoja24.db';
+    const nomeBanco = 'dbLoja30.db';
     const cx = SQLite.openDatabaseAsync(nomeBanco);
     return cx;    
+}
+
+export async function closeDbConnection(dbCx) {
+    // Fechar apenas se tiver aberta
+    console.log(dbCx.isOpen);
+    if (dbCx.isOpen) {
+        await dbCx.closeAsync();
+        dbCx.isOpen = false;
+    }
 }
 
 export async function criaTabelas() {
@@ -11,6 +20,7 @@ export async function criaTabelas() {
     await criaTabelaVendas();
     await criaTabelaVendaProduto();
     await criaTabelaCategoria();
+    await criaTabelaCarrinho();
 };
 
 export async function insereValoresDefault() {
@@ -69,6 +79,19 @@ async function criaTabelaCategoria() {
     await cx.execAsync(query);
 }
 
+async function criaTabelaCarrinho() {
+    const query = `CREATE TABLE IF NOT EXISTS tbCarrinho
+        (
+            id text not null primary key,
+            idProduto text not null,
+            quantidade integer not null
+        )`;
+
+    var cx = await getDbConnection();
+    await cx.execAsync(query);
+    await closeDbConnection(cx);
+}
+
 async function insereCategoriasDefault() {
     let dbCx = await getDbConnection();
     let query = "INSERT INTO tbCategorias (id, codigo, descricao) VALUES ('1', '1', 'Jogos'), " + 
@@ -88,6 +111,6 @@ async function insereProdutosDefault() {
                 "('10', '10', 'Ferramenta 1', '199,99', 10, '4'), ('11', '11', 'Ferramenta 2', '50,99', 5, '4'), ('12', '12', 'Ferramenta 3', '5,99', 10, '4');";
     console.log(query);
     const result = await dbCx.runAsync(query, []);
-
+    await closeDbConnection(dbCx);
     return result.changes == 1;
 }
