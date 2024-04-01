@@ -73,22 +73,16 @@ export default function VisVendas({navigation}){
     async function filtrarVendas(valor) {
         setCategoria(valor);
 
-        // if (valor == '') {
-        //     let produtos = await obtemTodosProdutos();
+        if (valor == '') {
+            let vendas = await dbservice.obtemTodasVendas();
         
-        //     if (produtos != null) {
-        //         setProdutos(produtos);
-        //         atualizaProdutosVenda(produtos, false);
-        //     }
-        // }
-        // else {
-        //     let produtos = await obtemProdutosPorCategoria(valor);
+            trataDadosVenda(vendas);
+        }
+        else {
+            let vendas = await dbservice.obtemVendasPorCategoria(valor);
         
-        //     if (produtos != null) {
-        //         setProdutos(produtos);
-        //         atualizaProdutosVenda(produtos, false);
-        //     }        
-        // }
+            trataDadosVenda(vendas); 
+        }
     }
     
     async function limparCampos() {

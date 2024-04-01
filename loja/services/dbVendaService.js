@@ -41,6 +41,30 @@ export async function obtemTodasVendas() {
     return retorno;
 }
 
+export async function obtemVendasPorCategoria(categoria) {
+    var retorno = []
+    var dbCx = await getDbConnection();
+    const registros = await dbCx.getAllAsync('SELECT tbVendas.id, tp.preco, tp.descricao, tvp.quantidade, tbVendas.dataHora FROM tbVendas ' +
+                                             'INNER JOIN tbVendaProduto tvp ON tbVendas.id = tvp.idVenda ' +
+                                             'INNER JOIN tbProduto tp ON tvp.idProduto = tp.id ' +
+                                             'WHERE tp.categoria = ?' +
+                                             'ORDER BY tbVendas.dataHora DESC', [categoria]);
+
+    for (const registro of registros) {
+        let obj = {
+            id: registro.id,
+            preco: registro.preco,
+            produto: registro.descricao,
+            quantidade: registro.quantidade,
+            dataHora: registro.dataHora,
+        }
+
+        retorno.push(obj);
+    }
+    console.log(retorno);
+    return retorno;
+}
+
 export async function adicionaVenda(compras) {
     let dbCx = await getDbConnection();
     let idVenda = createUniqueId();
