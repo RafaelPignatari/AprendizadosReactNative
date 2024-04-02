@@ -25,6 +25,7 @@ export async function obtemTodasVendas() {
                                              'INNER JOIN tbVendaProduto tvp ON tbVendas.id = tvp.idVenda ' +
                                              'INNER JOIN tbProduto tp ON tvp.idProduto = tp.id ' +
                                              'ORDER BY tbVendas.dataHora DESC');
+    await closeDbConnection(dbCx);
 
     for (const registro of registros) {
         let obj = {
@@ -37,8 +38,6 @@ export async function obtemTodasVendas() {
 
         retorno.push(obj);
     }
-
-    await closeDbConnection(dbCx);
 
     return retorno;
 }
@@ -51,6 +50,7 @@ export async function obtemVendasPorCategoria(categoria) {
                                              'INNER JOIN tbProduto tp ON tvp.idProduto = tp.id ' +
                                              'WHERE tp.categoria = ?' +
                                              'ORDER BY tbVendas.dataHora DESC', [categoria]);
+    await closeDbConnection(dbCx);
 
     for (const registro of registros) {
         let obj = {
@@ -63,8 +63,6 @@ export async function obtemVendasPorCategoria(categoria) {
 
         retorno.push(obj);
     }
-    
-    await closeDbConnection(dbCx);
     
     return retorno;
 }

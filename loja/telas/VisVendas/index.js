@@ -12,12 +12,10 @@ export default function VisVendas({navigation}){
     const [categoria, setCategoria] = useState();
     const [categorias, setCategorias] = useState([]);
     const [visible, setVisible] = useState(false);
-    const [mensagem, setMensagem] = useState('oi!');
+    const [mensagem, setMensagem] = useState('');
 
-    useEffect(
-        () => {
-            carregaCategorias();
-            carregaDados();
+    useEffect(() => {
+      carregaDados();
     }, []);
 
     const openPopup = () => {
@@ -68,6 +66,8 @@ export default function VisVendas({navigation}){
             console.log(e.toString());
             Alert.alert(e.toString());
         }
+
+        await carregaCategorias();
     }
 
     async function filtrarVendas(valor) {

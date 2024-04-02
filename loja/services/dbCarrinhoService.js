@@ -9,6 +9,7 @@ export async function obtemCarrinho() {
     var dbCx = await getDbConnection();
     const registros = await dbCx.getAllAsync('SELECT tp.id, tp.descricao, tp.preco, tc.quantidade, tp.categoria FROM tbCarrinho tc ' +
                                              'INNER JOIN tbProduto tp ON tc.idProduto = tp.id ');
+    await closeDbConnection(dbCx);
 
     for (const registro of registros) {
 
@@ -21,8 +22,6 @@ export async function obtemCarrinho() {
         }
         retorno.push(obj);
     }
-
-    await closeDbConnection(dbCx);
 
     return retorno;
 }
@@ -58,7 +57,6 @@ export async function apagaProdutoCarrinho(idProduto) {
     let query = 'delete from tbCarrinho WHERE idProduto = ?';
     
     await dbCx.runAsync(query, [idProduto]);
-
     await closeDbConnection(dbCx);
 }
 
@@ -67,6 +65,5 @@ export async function limpaCarrinho() {
     let query = 'delete from tbCarrinho';
     
     await dbCx.runAsync(query);
-
     await closeDbConnection(dbCx);
 }

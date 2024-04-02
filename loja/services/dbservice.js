@@ -1,18 +1,13 @@
 import * as SQLite from 'expo-sqlite/next';
 
 export function getDbConnection() {
-    const nomeBanco = 'dbLoja30.db';
+    const nomeBanco = 'dbLoja31a.db';
     const cx = SQLite.openDatabaseAsync(nomeBanco);
     return cx;    
 }
 
 export async function closeDbConnection(dbCx) {
-    // Fechar apenas se tiver aberta
-    console.log(dbCx.isOpen);
-    if (dbCx.isOpen) {
-        await dbCx.closeAsync();
-        dbCx.isOpen = false;
-    }
+    await dbCx.closeAsync() ;
 }
 
 export async function criaTabelas() {
@@ -41,6 +36,7 @@ async function criaTabelaProduto() {
 
     var cx = await getDbConnection();
     await cx.execAsync(query);
+    await closeDbConnection(cx);
 }
 
 async function criaTabelaVendas() {
@@ -52,6 +48,7 @@ async function criaTabelaVendas() {
 
     var cx = await getDbConnection();
     await cx.execAsync(query);
+    await closeDbConnection(cx);
 }
 
 async function criaTabelaVendaProduto() {
@@ -65,6 +62,7 @@ async function criaTabelaVendaProduto() {
 
     var cx = await getDbConnection();
     await cx.execAsync(query);
+    await closeDbConnection(cx);
 }
 
 async function criaTabelaCategoria() {
@@ -77,6 +75,7 @@ async function criaTabelaCategoria() {
 
     var cx = await getDbConnection();
     await cx.execAsync(query);
+    await closeDbConnection(cx);
 }
 
 async function criaTabelaCarrinho() {
@@ -98,7 +97,7 @@ async function insereCategoriasDefault() {
                 "('2', '2', 'Eletrônicos'), ('3', '3', 'Livros'), ('4', '4', 'Ferramentas');";
     console.log(query);
     const result = await dbCx.runAsync(query, []);
-
+    await closeDbConnection(dbCx);
     return result.changes == 1;
 }
 

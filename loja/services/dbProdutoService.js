@@ -4,6 +4,7 @@ export async function obtemProduto() {
     var retorno = []
     var dbCx = await getDbConnection();
     const registros = await dbCx.getAllAsync('SELECT * FROM tbProduto LIMIT 1');
+    await closeDbConnection(dbCx);
 
     for (const registro of registros) {
 
@@ -18,8 +19,6 @@ export async function obtemProduto() {
 
         retorno.push(obj);
     }
-
-    await closeDbConnection(dbCx);
 
     return retorno;
 }
@@ -28,6 +27,7 @@ export async function obtemTodosProdutos() {
     var retorno = []
     var dbCx = await getDbConnection();
     const registros = await dbCx.getAllAsync('SELECT * FROM tbProduto ');
+    await closeDbConnection(dbCx);
 
     for (const registro of registros) {
 
@@ -41,8 +41,6 @@ export async function obtemTodosProdutos() {
         }
         retorno.push(obj);
     }
-
-    await closeDbConnection(dbCx);
 
     return retorno;
 }
@@ -51,6 +49,7 @@ export async function obtemProdutosPorCategoria(categoria) {
     var retorno = []
     var dbCx = await getDbConnection();
     const registros = await dbCx.getAllAsync('SELECT * FROM tbProduto WHERE categoria = ? ', [categoria]);
+    await closeDbConnection(dbCx);
 
     for (const registro of registros) {
 
@@ -64,8 +63,6 @@ export async function obtemProdutosPorCategoria(categoria) {
         }
         retorno.push(obj);
     }
-
-    await closeDbConnection(dbCx);
 
     return retorno;
 }

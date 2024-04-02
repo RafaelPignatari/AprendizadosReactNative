@@ -9,10 +9,8 @@ export default function CadCompra({navigation}){
     const [produtosVenda, setProdutosVenda] = useState([]); 
     const [valorTotal, setValorTotal] = useState(0);
 
-    useEffect(
-        () => {
-            carregaDados();
-            calculaValorTotal();
+    useEffect(() => {
+        carregaDados();            
     }, []);
     
     async function efetuaCompra() {    
@@ -24,7 +22,6 @@ export default function CadCompra({navigation}){
             Keyboard.dismiss();
             Alert.alert('Venda efetuada com sucesso!!!');
             limparCarrinho();
-            carregaDados();
         } catch (e) {
             console.log(e.toString());
             Alert.alert(e.toString());
@@ -73,6 +70,8 @@ export default function CadCompra({navigation}){
         } catch (e) {
             Alert.alert(e.toString());
         }
+
+        calculaValorTotal();
     }
 
     function atualizaProdutosVenda(produtos) {

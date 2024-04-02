@@ -4,7 +4,7 @@ export async function obtemCategoria() {
     var retorno = []
     var dbCx = await getDbConnection();
     const registros = await dbCx.getAllAsync('SELECT * FROM tbCategorias LIMIT 1');
-
+    await closeDbConnection(dbCx);
     for (const registro of registros) {
 
         let obj = {
@@ -15,8 +15,6 @@ export async function obtemCategoria() {
 
         retorno.push(obj);
     }
-
-    await closeDbConnection(dbCx);
 
     return retorno;
 }
@@ -25,6 +23,7 @@ export async function obtemTodasCategorias() {
     var retorno = []
     var dbCx = await getDbConnection();
     const registros = await dbCx.getAllAsync('SELECT * FROM tbCategorias ');
+    await closeDbConnection(dbCx);
 
     for (const registro of registros) {
 
@@ -35,8 +34,6 @@ export async function obtemTodasCategorias() {
         }
         retorno.push(obj);
     }
-
-    await closeDbConnection(dbCx);
 
     return retorno;
 }

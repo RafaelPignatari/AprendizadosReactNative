@@ -18,8 +18,7 @@ export default function CadProduto({navigation}){
 
     useEffect(
         () => {
-            console.log(categoria);
-            carregaCategorias();
+            console.log(categoria);            
             carregaDados();
     }, []);
 
@@ -60,18 +59,19 @@ export default function CadProduto({navigation}){
     async function carregaDados() {
         try {
             let produtos = await dbservice.obtemTodosProdutos();
-            console.log(produtos)
         
             if (produtos != null) {
                 setProdutos(produtos);
             }
             else {
                 setProdutos([]);
-            }    
+            }            
         } catch (e) {
             console.log(e.toString());
             Alert.alert(e.toString());
         }
+
+        carregaCategorias();
     }
     
     function editar(identificador) {
@@ -133,7 +133,6 @@ export default function CadProduto({navigation}){
     async function carregaCategorias() {
         try {
             let categorias = await obtemTodasCategorias();
-            console.log(categorias)
         
             if (categorias != null) {
                 setCategorias(categorias);

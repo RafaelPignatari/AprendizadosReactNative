@@ -13,10 +13,8 @@ export default function CadCompra({navigation}){
     const [produtosVenda, setProdutosVenda] = useState([]);  
     const [categorias, setCategorias] = useState([]);
 
-    useEffect(
-        () => {
-            carregaCategorias();
-            carregaDados();
+    useEffect(() => {            
+        carregaDados();
     }, []);    
     
     async function carregaDados() {
@@ -31,6 +29,8 @@ export default function CadCompra({navigation}){
                 setProdutos([]);
                 setProdutosVenda([]);
             }    
+
+            await carregaCategorias();
         } catch (e) {
             Alert.alert(e.toString());
         }
