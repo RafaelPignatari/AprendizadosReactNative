@@ -67,15 +67,20 @@ export async function obtemVendasPorCategoria(categoria) {
     return retorno;
 }
 
-export async function adicionaVenda(compras) {
+export async function adicionaVenda(produtos) {
     let dbCx = await getDbConnection();
     let idVenda = createUniqueId();
 
-    for (const compra of compras) {
+    for (const produto of produtos) {
+        //Executa inserção na tabela de Vendas.
         let query = 'insert into tbVendaProduto (id, idVenda, idProduto, quantidade) values (?,?,?,?)';
 
-        console.log(compra.id, compra.quantidade)
-        await dbCx.runAsync(query, [createUniqueId(), idVenda, compra.id, compra.quantidade]);
+        console.log(produto.id, produto.quantidade)
+        await dbCx.runAsync(query, [createUniqueId(), idVenda, produto.id, produto.quantidade]);
+
+        //Executa atualização na tabela de Produtos.
+        query = 'update tbProduto set quantidade = quantidade - ? where id = ?';
+        await dbCx.runAsync(query, [produto.quantidade, produto.id]);
     }
 
     let query = 'insert into tbVendas (id, datahora) values (?,?)';

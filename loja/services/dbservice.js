@@ -95,7 +95,6 @@ async function insereCategoriasDefault() {
     let dbCx = await getDbConnection();
     let query = "INSERT INTO tbCategorias (id, codigo, descricao) VALUES ('1', '1', 'Jogos'), " + 
                 "('2', '2', 'Eletrônicos'), ('3', '3', 'Livros'), ('4', '4', 'Ferramentas');";
-    console.log(query);
     const result = await dbCx.runAsync(query, []);
     await closeDbConnection(dbCx);
     return result.changes == 1;
@@ -108,7 +107,6 @@ async function insereProdutosDefault() {
                 "('4', '4', 'Processador', '1099,99', 10, '2'), ('5', '5', 'GTX 1050 TI 4 GB', '1500', 5, '2'), ('6', '6', 'Ferro de Solda', '15', 10, '2'), " +
                 "('7', '7', 'Livro 1', '199,99', 10, '3'), ('8', '8', 'Livro 2', '50,99', 5, '3'), ('9', '9', 'Livro 3', '5,99', 10, '3'), " +
                 "('10', '10', 'Ferramenta 1', '199,99', 10, '4'), ('11', '11', 'Ferramenta 2', '50,99', 5, '4'), ('12', '12', 'Ferramenta 3', '5,99', 10, '4');";
-    console.log(query);
     const result = await dbCx.runAsync(query, []);
     await closeDbConnection(dbCx);
     return result.changes == 1;

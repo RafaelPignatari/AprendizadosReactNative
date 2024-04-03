@@ -1,8 +1,9 @@
 import { StatusBar } from 'expo-status-bar';
 import { useState, useEffect } from 'react';
-import {Text, View, TouchableOpacity } from 'react-native';
+import {Text, View, TouchableOpacity, Alert } from 'react-native';
 import styles from './styles';
 import { criaTabelas, insereValoresDefault } from '../../services/dbservice';
+import { obtemTodasCategorias } from '../../services/dbCategoriaService';
 
 export default function Home({ navigation }) {
   async function processamentoUseEffect() {
@@ -16,7 +17,26 @@ export default function Home({ navigation }) {
 
   async function insereValoresNoBanco() {
     try {
-      await insereValoresDefault();
+      // Verifica se já existem registros no banco
+      let categorias = await obtemTodasCategorias();
+
+      if (categorias.length <= 0) {
+        await insereValoresDefault();
+        Alert.alert('Valores padrão inseridos com sucesso!');
+      }
+      else if (Alert.alert('Atenção', 'O seu banco parece já ter registros. Tem certeza que deseja adicionar valores padrão?',
+      [
+        {
+          text: 'Sim, confirmo!',
+          onPress: async() => {
+              await insereValoresDefault();
+              Alert.alert('Valores padrão inseridos com sucesso!');
+          }
+        },
+        {
+          text: 'Não!'
+        }
+      ]));
     }
     catch (e) {
       console.log(e.toString());
