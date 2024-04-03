@@ -4,9 +4,11 @@ import { useState, useEffect } from 'react';
 import * as dbservice from '../../services/dbVendaService';
 import { apagaProdutoCarrinho, limpaCarrinho, obtemCarrinho } from '../../services/dbCarrinhoService';
 import ItemCarrinho from '../../components/ItemCarrinho';
+import { obtemTodosProdutos } from '../../services/dbProdutoService';
 
 export default function CadCompra({navigation}){
     const [produtosVenda, setProdutosVenda] = useState([]); 
+    const [produtosEstoque, setProdutosEstoque] = useState([]);
     const [valorTotal, setValorTotal] = useState('');
 
     useEffect(() => {
@@ -47,11 +49,22 @@ export default function CadCompra({navigation}){
             ]));
         }
         else {
-            var produtoAux = [...produtosVenda]; // cria uma cópia do array
+            try {
+                var produtoVendaAux = [...produtosVenda]; // cria uma cópia do array
 
-            produtoAux.find(p => p.id == id).quantidade = quantidade;
-        
-            setProdutosVenda(produtoAux); // atualiza o estado com a cópia modificada
+                if (produtosEstoque.find(p => p.id == id.toString()).quantidade < quantidade) {
+                    Alert.alert('Quantidade indisponível!');
+                    return;
+                }
+
+                produtoVendaAux.find(p => p.id == id).quantidade = quantidade;
+            
+                setProdutosVenda(produtoVendaAux); // atualiza o estado com a cópia modificada
+            }
+            catch (e) {
+                console.log(e.toString());
+                Alert.alert(e.toString());
+            }
         }
 
         calculaValorTotal();
@@ -60,9 +73,11 @@ export default function CadCompra({navigation}){
     async function carregaDados() {
         try {
             let produtos = await obtemCarrinho();
+            let produtosEstoque = await obtemTodosProdutos();
             
             if (produtos != null) {
                 atualizaProdutosVenda(produtos);
+                setProdutosEstoque(produtosEstoque);
             }
             else {
                 setProdutosVenda([]);
@@ -92,7 +107,6 @@ export default function CadCompra({navigation}){
 
     function calculaValorTotal() {
         // Filtra os produtos que possuem quantidade maior que zero
-        console.log(`Passei aqui!`)
         let produtosAux = produtosVenda.filter(p => p.quantidade > 0);      
         let valorTotalAux = 0;
 

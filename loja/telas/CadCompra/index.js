@@ -11,7 +11,9 @@ export default function CadCompra({navigation}){
     const [categoria, setCategoria] = useState();
     const [produtos, setProdutos] = useState([]);
     const [produtosVenda, setProdutosVenda] = useState([]);  
+    const [produtosVisualizacao, setProdutosVisualizacao] = useState([]);
     const [categorias, setCategorias] = useState([]);
+    const [primeiraVez, setPrimeiraVez] = useState(true);
 
     useEffect(() => {            
         carregaDados();
@@ -19,11 +21,11 @@ export default function CadCompra({navigation}){
     
     async function carregaDados() {
         try {
-            let produtos = await obtemTodosProdutos();
+            let produtosBanco = await obtemTodosProdutos();
         
-            if (produtos != null) {
-                setProdutos(produtos);
-                atualizaProdutosVenda(produtos, true);
+            if (produtosBanco != null) {
+                setProdutos([...produtosBanco]);
+                atualizaProdutosVenda(produtosBanco);
             }
             else {
                 setProdutos([]);
@@ -39,8 +41,6 @@ export default function CadCompra({navigation}){
     async function adicionaAoCarrinho() {
         try {
             let produtosAux = produtosVenda.filter(p => p.quantidade > 0);
-            console.log(produtosAux);
-            console.log(produtosAux.length);
 
             if (produtosAux.length != 0) {
                 await adicionaCarrinho(produtosAux);
@@ -56,64 +56,81 @@ export default function CadCompra({navigation}){
         }
     }
 
-    function atualizaProdutosVenda(produtos, zeraQuantidade) {
+    function atualizaProdutosVenda(produtosAux) {
         // Filtra os produtos que possuem quantidade maior que zero
-        let produtosAux = produtos.filter(p => p.quantidade > 0);
+        let produtosAux1 = produtosAux.filter(p => p.quantidade > 0);
+        let copiaProdutosAux = JSON.parse(JSON.stringify(produtosAux1)); // Cria uma cópia dos itens e dos subitens, sem manter a referência dos objetos.
         
-        //Zera a quantidade (o cliente escolherá a quantidade na tela de venda)
-        if (zeraQuantidade == true) {
-            produtosAux.forEach(p => {
-                p.quantidade = 0;
-            });            
+        copiaProdutosAux.forEach(p => {
+            p.quantidade = 0;
+        });
+
+        if (!primeiraVez) {
+            copiaProdutosAux.forEach(p => {
+                let produtoEspecifico = produtosVenda.find(pv => pv.id == p.id);
+
+                if (produtoEspecifico) {
+                    p.quantidade = parseInt(produtoEspecifico.quantidade);
+                }
+            });
         }
         else {
-            // Atualiza a quantidade de produtos
-            produtosAux.forEach(p => {
-                let produto = produtosVenda.find(pv => pv.id == p.id);
-
-                if (produto) {
-                    p.quantidade = produto.quantidade;
-                }
-            });        
+            setProdutosVenda(copiaProdutosAux);
         }
 
-        setProdutosVenda(produtosAux);
+        setPrimeiraVez(false);
+        setProdutosVisualizacao(copiaProdutosAux);
     }
     
     function atualizaQuantidade(id, quantidade) {
-        var produtoAux = [...produtosVenda]; // cria uma cópia do array
+        console.log(produtosVenda)
+        try {
+            var produtoVendaAux = [...produtosVenda]; // cria uma cópia do array
+            var produtoVisAux = [...produtosVisualizacao]; // cria uma cópia do array
 
-        produtoAux.find(p => p.id == id).quantidade = quantidade;
-    
-        setProdutosVenda(produtoAux); // atualiza o estado com a cópia modificada
+            if (produtos.find(p => p.id == id.toString()).quantidade < quantidade) {
+                Alert.alert('Quantidade indisponível!');
+                return;
+            }
+
+            produtoVendaAux.find(p => p.id == id).quantidade = quantidade;
+            produtoVisAux.find(p => p.id == id).quantidade = quantidade;
+        
+            setProdutosVenda(produtoVendaAux); // atualiza o estado com a cópia modificada
+            setProdutosVisualizacao(produtoVisAux); // atualiza o estado com a cópia modificada
+        }
+        catch (e) {
+            console.log(e.toString());
+            Alert.alert(e.toString());
+        }
     }
 
     async function filtrarProdutos(valor) {
         setCategoria(valor);
         if (valor == '') {
-            let produtos = await obtemTodosProdutos();
-        
-            if (produtos != null) {
-                setProdutos(produtos);
-                atualizaProdutosVenda(produtos, false);
+            let produtosBanco = await obtemTodosProdutos();
+
+            if (produtosBanco != null) {
+                setProdutos(produtosBanco);
+                atualizaProdutosVenda(produtosBanco);
             }
         }
         else {
-            let produtos = await obtemProdutosPorCategoria(valor);
+            let produtosBanco = await obtemProdutosPorCategoria(valor);
         
-            if (produtos != null) {
-                setProdutos(produtos);
-                atualizaProdutosVenda(produtos, false);
+            if (produtosBanco != null) {
+                setProdutos([...produtosBanco]);
+                atualizaProdutosVenda(produtosBanco);
             }        
         }
     }
 
     async function carregaCategorias() {
         try {
-            let categorias = await obtemTodasCategorias();
+            let categoriasBanco = await obtemTodasCategorias();
         
-            if (categorias != null) {
-                setCategorias(categorias);
+            if (categoriasBanco != null) {
+                setCategorias(categoriasBanco);
             }
             else {
                 setCategorias([]);
@@ -155,8 +172,8 @@ export default function CadCompra({navigation}){
   
         <ScrollView style={styles.listaCompras}>
           {
-            produtosVenda.map((produto, index) => (
-              <Compra index={index} produto={produto} atualizaQuantidade={atualizaQuantidade} key={index.toString()} />
+            produtosVisualizacao.map((produtoV, index) => (
+              <Compra index={index} produto={produtoV} atualizaQuantidade={atualizaQuantidade} key={index.toString()} />
             ))
           }
         </ScrollView>

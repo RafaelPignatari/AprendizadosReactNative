@@ -19,7 +19,7 @@ export default function Compra({index, produto, atualizaQuantidade}) {
                             onChangeText={(texto) => atualizaQuantidade(produto.id, texto)}                            
                             keyboardType='phone-pad' />
 
-                <TouchableOpacity onPress={() => atualizaQuantidade(produto.id, produto.quantidade + 1)}>
+                <TouchableOpacity onPress={() => atualizaQuantidade(produto.id, parseInt(produto.quantidade) + 1)}>
                     <Ionicons name="add-circle-outline" size={32} color="green" />
                 </TouchableOpacity>
             </View>
