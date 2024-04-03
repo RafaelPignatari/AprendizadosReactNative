@@ -19,10 +19,9 @@ const styles = StyleSheet.create({
   },
 
   picker: {
-    width: '100%',
-    padding: 0,
+    width: '85%',
+    marginLeft: 10,
     color: '#000',
-    margin: 5
   },
 
   botao: {
@@ -67,6 +66,20 @@ const styles = StyleSheet.create({
 
   areaPorTres: {
     width: '20%',
+    marginLeft: 20,
+    marginTop: 10,
+  },
+
+  areaPicker: {
+    width: '20%',
+    flex: 1,
+    margin: 0,
+    padding: 0,
+  },
+
+  labelCategoria: {
+    marginLeft: 10,
+    marginTop: 10,
   },
 
   listaContatos: {

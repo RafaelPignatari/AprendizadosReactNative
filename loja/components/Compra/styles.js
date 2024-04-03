@@ -29,6 +29,13 @@ const styles = StyleSheet.create({
         paddingRight: 10,
     },
 
+    valor: {
+        color: '#000',
+        fontSize: 18,
+        paddingLeft: 10,
+        flexWrap: 'nowrap'
+    },
+
     quantidade: {
         color: '#000',
         fontSize: 15,

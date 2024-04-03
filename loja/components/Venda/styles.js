@@ -33,7 +33,14 @@ const styles = StyleSheet.create({
     preco: {
         color: '#000',
         fontSize: 15,
-        paddingRight: 10,
+        paddingLeft: 10,
+    },
+
+    valor: {
+        color: '#000',
+        fontSize: 18,
+        paddingLeft: 10,
+        flexWrap: 'nowrap'
     },
 
     botaoVoltar: {

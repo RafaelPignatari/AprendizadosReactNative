@@ -9,8 +9,8 @@ export default function Venda({index, venda, mostraDetalhes}) {
         let msg = '';
 
         for (let i = 0; i < venda.preco.length; i++) {
-            msg += venda.produtos[i] + ' - R$ ' + venda.preco[i] + ' - ' + venda.quantidade[i] + ' unidade(s) - ';
-            msg += 'Preço total: ' + parseFloat(venda.preco[i].replace(',', '.')) * parseInt(venda.quantidade[i]) +'\n\n';
+            msg += venda.produtos[i] + ' -\nR$ ' + venda.preco[i] + ' -\n' + venda.quantidade[i] + ' unidade(s) -\n';
+            msg += 'Preço total: R$' + (parseFloat(venda.preco[i].replace(',', '.')) * parseInt(venda.quantidade[i])).toFixed(2) +'\n\n';
         }
         
         mostraDetalhes(msg);
@@ -23,7 +23,7 @@ export default function Venda({index, venda, mostraDetalhes}) {
             valorTotal += parseFloat(venda.preco[i].replace(',', '.')) * parseInt(venda.quantidade[i]);
         }
 
-        return valorTotal.toString().replace('.', ',').padEnd(2, '0');
+        return valorTotal.toFixed(2).toString().replace('.', ',');
     }
 
     return (

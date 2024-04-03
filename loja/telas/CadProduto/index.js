@@ -79,10 +79,10 @@ export default function CadProduto({navigation}){
     
         if (produto) {
             setId(produto.id);
-            setCodigo(produto.codigo);
+            setCodigo(produto.codigo.toString());
             setDescricao(produto.descricao);
             setPreco(produto.preco);
-            setQuantidade(produto.quantidade);
+            setQuantidade(produto.quantidade.toString());
             setCategoria(produto.categoria);
         }
     
@@ -194,8 +194,8 @@ export default function CadProduto({navigation}){
               keyboardType='phone-pad' />
           </View>
 
-          <View style={styles.areaPorTres}>
-            <Text>Categoria</Text>
+          <View style={styles.areaPicker}>
+            <Text style={styles.labelCategoria}>Categoria</Text>
             <Picker style={styles.picker} selectedValue={categoria}
                 onValueChange={(itemValue, itemIndex) => setCategoria(itemValue)}>
                 <Picker.Item label="Selecione..." value=""/>

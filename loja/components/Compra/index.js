@@ -10,7 +10,7 @@ export default function Compra({index, produto, atualizaQuantidade}) {
         <Text style={styles.listaProdutos}> {produto.descricao}</Text>
             <View style={styles.dadosListaProduto}>
                 <Ionicons name="wallet-outline" style={styles.iconTelefone} size={25}></Ionicons>
-                <Text style={styles.listaProdutos}>R$ {produto.preco} </Text>
+                <Text style={styles.valor}>R$ {produto.preco} </Text>
             </View>
 
             <View style={styles.dadosBotoesAcao}>

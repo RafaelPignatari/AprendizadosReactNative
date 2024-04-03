@@ -45,6 +45,13 @@ const styles = StyleSheet.create({
       alignItems: 'center'
     },
 
+    valor: {
+        color: '#000',
+        fontSize: 18,
+        paddingLeft: 10,
+        flexWrap: 'nowrap'
+    },
+
     labelBotao: {
       fontSize: 30,    
       color: '#FFF',

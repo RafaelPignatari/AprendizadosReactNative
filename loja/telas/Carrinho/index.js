@@ -7,7 +7,7 @@ import ItemCarrinho from '../../components/ItemCarrinho';
 
 export default function CadCompra({navigation}){
     const [produtosVenda, setProdutosVenda] = useState([]); 
-    const [valorTotal, setValorTotal] = useState(0);
+    const [valorTotal, setValorTotal] = useState('');
 
     useEffect(() => {
         carregaDados();            
@@ -92,6 +92,7 @@ export default function CadCompra({navigation}){
 
     function calculaValorTotal() {
         // Filtra os produtos que possuem quantidade maior que zero
+        console.log(`Passei aqui!`)
         let produtosAux = produtosVenda.filter(p => p.quantidade > 0);      
         let valorTotalAux = 0;
 
@@ -100,7 +101,7 @@ export default function CadCompra({navigation}){
             valorTotalAux += parseFloat(p.preco.replace(',', '.')) * p.quantidade;
         });
 
-        setValorTotal(valorTotalAux);
+        setValorTotal('R$ ' + valorTotalAux.toFixed(2).toString().replace('.', ','));
     }
     
     async function limparCarrinho() {
